@@ -6,10 +6,30 @@
  */
 class TorExitNodes
 {
-    private $exit_addresses_url = 'https://check.torproject.org/exit-addresses';
-    private $exit_addresses_file = 'exit_addresses.txt';
-    private $update_interval = 4; // hours
+    protected $exit_addresses_url = 'https://check.torproject.org/exit-addresses';
+    protected $exit_addresses_file = 'exit_addresses.txt';
+    protected $update_interval = 4; // hours
 
+	/**
+	 * Método para setar intervalo do cache
+	 * 
+	 * @param $interval INTEGER - Numero de horas
+	 */
+	public function setUpdateInterval($interval)
+	{
+		$this->update_interval = $interval;
+	}
+	
+	/**
+	 * Método para setar o caminho do cache
+	 * 
+	 * @param $path TEXT - Caminho para o arquivo do cache
+	 */
+	public function setUpdateInterval($path)
+	{
+		$this->exit_addresses_file = $path;
+	}
+	
     /**
      * Método que faz o download de todas as informações
      * a respeito dos exit nodes.
