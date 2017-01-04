@@ -25,7 +25,7 @@ class TorExitNodes
 	 * 
 	 * @param $path TEXT - Caminho para o arquivo do cache
 	 */
-	public function setUpdateInterval($path)
+	public function setAddressesFile($path)
 	{
 		$this->exit_addresses_file = $path;
 	}
