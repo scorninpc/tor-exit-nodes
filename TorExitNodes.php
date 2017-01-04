@@ -54,7 +54,7 @@ class TorExitNodes
         $pattern = '/([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})/';
 
         if(preg_match_all($pattern, $exit_addresses, $ips)) {
-            file_put_contents('exit_addresses.txt', implode("\n", $ips[0]));
+            file_put_contents($this->exit_addresses_file, implode("\n", $ips[0]));
         }
     }
 
@@ -68,7 +68,13 @@ class TorExitNodes
     public function checkFileModifiedTime()
     {
         $file_modified_time = filemtime($this->exit_addresses_file);
-
+		
+		// Verifica se foi possivel ler o arquivo
+        if(!$file_modified_time) {
+    		$this->updateExitAddressIps();
+    		return TRUE;
+        }
+        
         $date_mfile = new Datetime(date('Y-m-d H:i:s', $file_modified_time));
         $date_now = new Datetime('now');
 
@@ -94,6 +100,29 @@ class TorExitNodes
         }
         return false;
     }
+    
+	/**
+	 * Método experimental para verificação rapida sem consumo de memoria
+	 * 
+	 * Verificar tambem a possibilidade de usar o comando exec, para assim utilizar o comando GREP
+	 */
+	public function _fastTorVerify($ip)
+	{
+		$this->checkFileModifiedTime();
+		
+		$handle = fopen($this->exit_addresses_file, "r");
+		if($handle) {
+			while (($buffer = fgets($handle)) !== FALSE) {
+				if (strpos($buffer, $ip) !== FALSE) {
+					return TRUE;
+					break;
+				}
+			}
+			fclose($handle);
+			
+			return FALSE;
+		}
+	}
 }
 
 ?>
